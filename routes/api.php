@@ -23,5 +23,3 @@ Route::post('/account/login', 'AuthController@login')->name('login');
 Route::group(['middleware' => 'auth.api'], function () {
     Route::get('/account/profile', 'PrivateRoutes@testRoute')->name('profile');
 });
-
-// Route::get('/account/profile', 'PrivateRoutes@testRoute')->name('profile');
