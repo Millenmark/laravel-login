@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PrivateRoutes extends Controller
 {
-    public function testRoute(Request $request)
+    public function profile(Request $request)
     {
         $userData = $request->user_data;
 
