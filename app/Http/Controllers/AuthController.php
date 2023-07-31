@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use ReallySimpleJWT\Token;
 use App\Models\User;
-
+use Illuminate\Validation\Rules\Password;
 
 class AuthController extends Controller
 {
@@ -48,28 +48,32 @@ class AuthController extends Controller
             [
                 'name' => 'required|string|max:255',
                 'email' => 'required|email|unique:users',
-                'password' => 'required|string|min:6|regex:/^(?=[^a-z]*[a-z])(?=[^A-Z]*[A-Z])(?=\D*\d)(?=[^!#%_]*[!#%_])[A-Za-z0-9!#%_]{8,32}$/',
+                'password' => [
+                    Password::min(8)
+                        ->letters()
+                        ->mixedCase()
+                        ->numbers()
+                        ->symbols()
+                        ->uncompromised()
+                ],
             ],
-            [
-                'password.regex' => 'The password must be alphanumeric with at least one special character.',
-            ]
         );
 
         if ($validator->fails()) {
             return response()
                 ->json([
-                    'message' => $validator->errors(),
+                    'message' => $validator->errors()->all(),
                     'status' => 'Unprocessable Content',
                     'code' => 422
                 ], 422)
                 ->header('Content-Type', 'application/json');
         }
 
-        $user = new User();
-        $user->name = $request->input('name');
-        $user->email = $request->input('email');
-        $user->password = bcrypt($request->input('password'));
-        $user->save();
+        User::create([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+        ]);
 
         return response()
             ->json([
