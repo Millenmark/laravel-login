@@ -27,6 +27,7 @@ class AuthMiddleware
             } else {
 
                 // dd(Token::getPayload($token, $secret));
+                // dd(Token::getHeader($token, $secret));
 
                 $user = User::find(Token::getPayload($token, $secret)['uid']);
 
