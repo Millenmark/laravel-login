@@ -5,7 +5,7 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use ReallySimpleJWT\Token;
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class AuthMiddleware
 {
@@ -18,14 +18,30 @@ class AuthMiddleware
             $apiKey = $request->header('x-api-key');
             $token = str_replace('Bearer ', '', $authorizationHeader);
 
-            $secretKey = 'Hello&MikeFooBar123';
-            $tokenValidation = Token::validate($token, $secretKey);
+            $secret = 'Hello&MikeFooBar123';
 
-            if (!$tokenValidation) {
+            if (!Token::validate($token, $secret)) {
                 return response()->json(['message' => 'Invalid Authorization Token'], 400);
             } else if ($apiKey !== env('API_KEY')) {
                 return response()->json(['message' => 'Invalid Access Key'], 400);
             } else {
+
+                // dd(Token::getPayload($token, $secret));
+
+                $user = User::find(Token::getPayload($token, $secret)['uid']);
+
+                if (!$user) {
+                    return response()->json(['message' => 'User not found'], 404);
+                }
+
+                $email = $user->email;
+                $name = $user->name;
+
+                $request->merge(['user_data' => [
+                    'name' => $name,
+                    'email' => $email,
+                ]]);
+
                 return $next($request);
             }
         }
