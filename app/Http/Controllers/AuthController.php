@@ -46,7 +46,8 @@ class AuthController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'name' => 'required|string|max:255',
+                'firstName' => 'required|string|max:255',
+                'lastName' => 'required|string|max:255',
                 'email' => 'required|email|unique:users',
                 'password' => [
                     Password::min(8)
@@ -70,7 +71,8 @@ class AuthController extends Controller
         }
 
         User::create([
-            'name' => $request->input('name'),
+            'fname' => $request->input('firstName'),
+            'lname' => $request->input('lastName'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
         ]);
