@@ -13,7 +13,6 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $secret = 'Hello&MikeFooBar123';
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|email',
@@ -28,8 +27,17 @@ class AuthController extends Controller
             $token = Token::customPayload([
                 'uid' => Auth::user()->id,
                 'exp' => time() +  3600,
-            ], $secret);
-            return response()->json(['token' => $token], 200);
+            ], env('JWT_SECRET'));
+
+            $user = User::find(Token::getPayload($token, env('JWT_SECRET'))['uid']);
+
+            return response()->json([
+                'token' => $token,
+                'user' => [
+                    'name' => $user->fname . ' ' . $user->lname,
+                    'email' => $user->email,
+                ]
+            ], 200);
         }
 
         return response()->json(['message' => 'Invalid credentials'], 401);
@@ -70,18 +78,28 @@ class AuthController extends Controller
                 ->header('Content-Type', 'application/json');
         }
 
-        User::create([
+        $user = User::create([
             'fname' => $request->input('firstName'),
             'lname' => $request->input('lastName'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
         ]);
 
+        $token = Token::customPayload([
+            'uid' => $user->id,
+            'exp' => time() +  3600,
+        ], env('JWT_SECRET'));
+
         return response()
             ->json([
                 'message' => /*$user->id . ' ' .*/ 'Account Created Successfully ',
                 'status' => 'Created',
-                'code' => 201
+                'code' => 201,
+                'token' => $token,
+                'user' => [
+                    'name' => $user->fname . ' ' . $user->lname,
+                    'email' => $user->email,
+                ],
             ], 201)
             ->header('Content-Type', 'application/json');
     }
