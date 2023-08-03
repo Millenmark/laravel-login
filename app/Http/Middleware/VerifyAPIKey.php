@@ -19,6 +19,6 @@ class VerifyAPIKey
             }
         }
 
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return response()->json(['message' => 'Unauthorized'], 401);
     }
 }
