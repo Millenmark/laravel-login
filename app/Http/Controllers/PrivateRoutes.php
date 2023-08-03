@@ -9,11 +9,16 @@ class PrivateRoutes extends Controller
 {
     public function profile(Request $request)
     {
-        $userData = $request->user_data;
+        $userData = $request->user;
 
         $email = $userData['email'];
         $name = $userData['name'];
 
-        return response()->json(['name' => $name, 'email' => $email]);
+        return response()->json([
+            'user' => [
+                'name' => $name,
+                'email' => $email
+            ]
+        ]);
     }
 }
