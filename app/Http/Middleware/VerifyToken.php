@@ -35,8 +35,8 @@ class VerifyToken
                 }
 
                 $request->merge([
-                    'user_data' => [
-                        'name' => $user->name,
+                    'user' => [
+                        'name' => $user->fname . " " . $user->lname,
                         'email' => $user->email,
                     ]
                 ]);
