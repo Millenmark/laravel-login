@@ -19,10 +19,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 // User signing in
-Route::post('/account/login', 'AuthController@login')->name('login');
+Route::post('/account/login', 'AuthController@login')->middleware(['validate-api-key'])->name('login');
 
 // User signing up
-Route::post('/account/register', 'AuthController@register')->name('register');
+Route::post('/account/register', 'AuthController@register')->middleware(['validate-api-key'])->name('register');
 
 // PROTECTED: User Profile
 Route::get('/account/profile', 'PrivateRoutes@profile')
