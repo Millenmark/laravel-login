@@ -15,12 +15,25 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
+            'avatar_url' => $this->faker->imageUrl(),
             'fname' => $this->faker->firstName(),
             'lname' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
+            'phone_number' => $this->faker->phoneNumber(),
+            'address' => $this->faker->address(),
+            'country' => $this->faker->country(),
+            'state' => $this->faker->state(),
+            'city' => $this->faker->city(),
+            'zip_code' => $this->faker->postcode(),
+            'company' => $this->faker->company(),
+            'isVerified' => true,
+            'status' => $this->faker->randomElement(['active', 'banned']),
+            'role' => $this->faker->randomElement(['admin', 'user']),
             'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-            'remember_token' => Str::random(10),
+            'password' => bcrypt('password'), // Change 'password' to your desired default password
+            'remember_token' => \Illuminate\Support\Str::random(10),
+            'created_at' => now(),
+            'updated_at' => now(),
         ];
     }
 
