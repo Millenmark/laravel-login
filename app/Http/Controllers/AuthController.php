@@ -92,7 +92,7 @@ class AuthController extends Controller
 
         return response()
             ->json([
-                'message' => /*$user->id . ' ' .*/ 'Account Created Successfully ',
+                'message' => 'Account Created Successfully ',
                 'status' => 'Created',
                 'code' => 201,
                 'token' => $token,
