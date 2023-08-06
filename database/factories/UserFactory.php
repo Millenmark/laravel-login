@@ -27,6 +27,8 @@ class UserFactory extends Factory
             'zip_code' => $this->faker->postcode(),
             'company' => $this->faker->company(),
             'isVerified' => true,
+            'isPublic' => true,
+            'about' => $this->faker->text(),
             'status' => $this->faker->randomElement(['active', 'banned']),
             'role' => $this->faker->randomElement(['admin', 'user']),
             'email_verified_at' => now(),
