@@ -26,7 +26,9 @@ class CreateUsersTable extends Migration
             $table->string('city')->nullable();
             $table->string('zip_code')->nullable();
             $table->string('company')->nullable();
-            $table->boolean('isVerified')->default(false);
+            $table->boolean('isVerified')->default(true);
+            $table->boolean('isPublic')->default(true);
+            $table->string('about')->nullable();
             $table->string('status')->nullable();
             $table->string('role')->nullable();
             $table->timestamp('email_verified_at')->nullable();
