@@ -34,7 +34,9 @@ class AuthController extends Controller
             return response()->json([
                 'token' => $token,
                 'user' => [
-                    'name' => $user->fname . ' ' . $user->lname,
+                    'id' => $user->id,
+                    'firstName' => $user->fname,
+                    'lastName' => $user->lname,
                     'email' => $user->email,
                 ]
             ], 200);
@@ -97,7 +99,9 @@ class AuthController extends Controller
                 'code' => 201,
                 'token' => $token,
                 'user' => [
-                    'name' => $user->fname . ' ' . $user->lname,
+                    'id' => $user->id,
+                    'firstName' => $user->fname,
+                    'lastName' => $user->lname,
                     'email' => $user->email,
                 ],
             ], 201)
