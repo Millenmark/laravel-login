@@ -36,7 +36,9 @@ class VerifyToken
 
                 $request->merge([
                     'user' => [
-                        'name' => $user->fname . " " . $user->lname,
+                        'id' => Token::getPayload($token, $secret)['uid'],
+                        'firstName' => $user->fname,
+                        'lastName' => $user->lname,
                         'email' => $user->email,
                     ]
                 ]);
