@@ -57,29 +57,29 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    protected function toCamelCase($value)
-    {
-        $segments = explode('_', $value);
+    // protected function toCamelCase($value)
+    // {
+    //     $segments = explode('_', $value);
 
-        array_walk($segments, function (&$item, $key) {
-            if ($key > 0) {
-                $item = ucfirst($item);
-            }
-        });
+    //     array_walk($segments, function (&$item, $key) {
+    //         if ($key > 0) {
+    //             $item = ucfirst($item);
+    //         }
+    //     });
 
-        return implode('', $segments);
-    }
+    //     return implode('', $segments);
+    // }
 
-    public function toArray()
-    {
-        $array = parent::toArray();
+    // public function toArray()
+    // {
+    //     $array = parent::toArray();
 
-        $newArray = [];
-        foreach ($array as $key => $value) {
-            $newKey = $this->toCamelCase($key);
-            $newArray[$newKey] = $value;
-        }
+    //     $newArray = [];
+    //     foreach ($array as $key => $value) {
+    //         $newKey = $this->toCamelCase($key);
+    //         $newArray[$newKey] = $value;
+    //     }
 
-        return $newArray;
-    }
+    //     return $newArray;
+    // }
 }

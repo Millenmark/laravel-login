@@ -15,34 +15,11 @@ class VerifyToken
             $authorizationHeader = $request->header('Authorization');
             $token = str_replace('Bearer ', '', $authorizationHeader);
 
-            $secret = 'Hello&MikeFooBar123';
-
-            if (!Token::validate($token, $secret)) {
+            if (!Token::validate($token, env('JWT_SECRET'))) {
                 return response()->json([
                     'message' => 'Invalid Authorization Token',
                 ], 400);
             } else {
-
-                // dd(Token::getPayload($token, $secret));
-                // dd(Token::getHeader($token, $secret));
-
-                $user = User::find(Token::getPayload($token, $secret)['uid']);
-
-                if (!$user) {
-                    return response()->json([
-                        'message' => 'User not found',
-                    ], 404);
-                }
-
-                $request->merge([
-                    'user' => [
-                        'id' => Token::getPayload($token, $secret)['uid'],
-                        'firstName' => $user->fname,
-                        'lastName' => $user->lname,
-                        'email' => $user->email,
-                    ]
-                ]);
-
                 return $next($request);
             }
         }

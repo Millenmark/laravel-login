@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Http\Resources\UserCollection;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
+use ReallySimpleJWT\Token;
 
 class UserController extends Controller
 {
@@ -15,7 +19,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        return User::all();
+        return new UserCollection(User::all());
     }
 
     /**
@@ -24,32 +28,8 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        // Validate the incoming request data
-        $validator = Validator::make($request->all(), [
-            'avatarUrl' => 'nullable',
-            'firstName' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phoneNumber' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'zipCode' => 'nullable|string|max:10',
-            'company' => 'nullable|string|max:255',
-            'isVerified' => 'nullable|boolean',
-            'status' => 'nullable|string|in:active,banned',
-            'role' => 'nullable|string|in:admin,user',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()->first(),
-            ]);
-        }
-
         User::create([
             'avatar_url' => $request->input('avatarUrl'),
             'fname' => $request->input('firstName'),
@@ -75,7 +55,7 @@ class UserController extends Controller
                 'status' => 'Created',
                 'code' => 201,
             ], 201)
-            ->header('Content-Type', 'application/json');;
+            ->header('Content-Type', 'application/json');
     }
 
     /**
@@ -86,7 +66,23 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-        return $user;
+        return new UserResource($user);
+    }
+
+    public function profile(Request $request)
+    {
+        $authorizationHeader = $request->header('Authorization');
+        $token = str_replace('Bearer ', '', $authorizationHeader);
+
+        $user = User::find(Token::getPayload($token, env('JWT_SECRET'))['uid']);
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'User not found',
+            ], 404);
+        }
+
+        return new UserResource($user);
     }
 
     /**
@@ -96,33 +92,8 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $validator = Validator::make($request->all(), [
-            'avatarUrl' => 'nullable',
-            'firstName' => 'required|string|max:255',
-            'lastName' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'phoneNumber' => 'nullable|string|max:20',
-            'address' => 'nullable|string|max:255',
-            'country' => 'nullable|string|max:255',
-            'state' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'zipCode' => 'nullable|string|max:10',
-            'company' => 'nullable|string|max:255',
-            'isVerified' => 'nullable|boolean',
-            'status' => 'nullable|string|in:active,banned',
-            'role' => 'nullable|string|in:admin,user',
-            'isPublic' => 'nullable|boolean',
-            'about' => 'nullable|string|max:255'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'message' => $validator->errors()->first(),
-            ]);
-        }
-
         try {
             $user->fill([
                 'avatar_url' => $request->input('avatarUrl') ?? $user->avatar_url,
@@ -149,10 +120,9 @@ class UserController extends Controller
                 'message' => 'User updated successfully.',
             ]);
         } catch (\Exception $e) {
-            // If an exception occurs during the save operation, you can catch it here.
             return response()->json([
                 'message' => 'An error occurred while updating the user.',
-                'error' => $e->getMessage(), // Optionally, you can include the error message for debugging purposes.
+                'error' => $e->getMessage(),
             ], 500);
         }
     }

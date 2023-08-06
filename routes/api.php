@@ -27,7 +27,7 @@ Route::post('/account/register', 'AuthController@register')->middleware(['valida
 /**
  * PROTECTED: User Profile
  */
-Route::get('/account/profile', 'PrivateRoutes@profile')
+Route::get('/account/profile', 'UserController@profile')
     ->middleware(['validate-access-token', 'validate-api-key'])
     ->name('profile');
 
