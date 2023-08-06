@@ -35,6 +35,18 @@ Route::get('/account/profile', 'PrivateRoutes@profile')
 /**
  * USER ROUTES
  */
+Route::get('/users', 'UserController@index')
+    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->name('users-all');
+
+Route::get('/users/{user}', 'UserController@show')
+    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->name('users-show');
+
 Route::post('/users', 'UserController@store')
     ->middleware(['validate-api-key'])
-    ->name('user-create');
+    ->name('users-create');
+
+Route::put('/users/{user}', 'UserController@update')
+    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->name('users-update');
