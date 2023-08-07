@@ -37,11 +37,11 @@ class StoreUserRequest extends FormRequest
             'city' => 'nullable|string|max:255',
             'zipCode' => 'nullable|string|max:10',
             'company' => 'nullable|string|max:255',
-            'isVerified' => 'nullable|boolean',
+            'isVerified' => 'nullable',
             'status' => 'nullable|string|in:active,banned',
             'role' => 'nullable|string|in:admin,user',
             'isPublic' => 'nullable|boolean',
-            'about' => 'nullable|string|max:255'
+            'about' => 'nullable|string|max:255',
         ];
     }
 
