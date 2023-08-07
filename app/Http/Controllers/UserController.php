@@ -30,6 +30,9 @@ class UserController extends Controller
      */
     public function store(StoreUserRequest $request)
     {
+        // $newImageName = time() . '.' . $request->avatar->extension();
+        // $request->avatarUrl->move(public_path('avatars'), $newImageName);
+
         User::create([
             'avatar_url' => $request->input('avatarUrl'),
             'fname' => $request->input('firstName'),
@@ -43,7 +46,7 @@ class UserController extends Controller
             'zip_code' => $request->input('zipCode'),
             'company' => $request->input('company'),
             'isVerified' => $request->input('isVerified'),
-            'status' => $request->input('status'),
+            'status' => $request->input('status') ?? 'active',
             'role' => $request->input('role'),
             'email_verified_at' => now(),
             'password' => bcrypt('123'),
@@ -127,14 +130,30 @@ class UserController extends Controller
         }
     }
 
+    public function upload(Request $request)
+    {
+        $request->validate([
+            'avatarUrl' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+        ]);
+
+        $imageName = time() . '.' . $request->avatarUrl->extension();
+
+        $request->avatarUrl->move(public_path('avatars'), $imageName);
+
+
+        return response()->json(['success' => 'Image uploaded successfully']);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return response()->json(['message' => 'Post deleted successfully']);
     }
 }
