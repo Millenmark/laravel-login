@@ -44,9 +44,17 @@ Route::get('/users/{user}', 'UserController@show')
     ->name('users-show');
 
 Route::post('/users', 'UserController@store')
-    ->middleware(['validate-api-key'])
+    ->middleware(['validate-access-token', 'validate-api-key'])
     ->name('users-create');
+
+Route::post('/users/upload', 'UserController@upload')
+    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->name('users-avatar-upload');
 
 Route::put('/users/{user}', 'UserController@update')
     ->middleware(['validate-access-token', 'validate-api-key'])
     ->name('users-update');
+
+Route::delete('/users/{user}', 'UserController@destroy')
+    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->name('users-delete');
