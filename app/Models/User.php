@@ -20,8 +20,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'avatar_url',
-        'fname',
-        'lname',
+        'first_name',
+        'last_name',
         'email',
         'phone_number',
         'address',
@@ -30,12 +30,12 @@ class User extends Authenticatable
         'city',
         'zip_code',
         'company',
-        'isVerified',
+        'is_verified',
         'status',
-        'role',
+        'role_id',
         'email_verified_at',
         'password',
-        'isPublic',
+        'is_public',
         'about'
     ];
 
@@ -57,6 +57,11 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 
     // protected function toCamelCase($value)
     // {

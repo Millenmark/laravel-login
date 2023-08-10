@@ -16,8 +16,8 @@ class UserFactory extends Factory
     {
         return [
             'avatar_url' => $this->faker->imageUrl(),
-            'fname' => $this->faker->firstName(),
-            'lname' => $this->faker->lastName(),
+            'first_name' => $this->faker->firstName(),
+            'last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
             'phone_number' => $this->faker->phoneNumber(),
             'address' => $this->faker->address(),
@@ -26,11 +26,11 @@ class UserFactory extends Factory
             'city' => $this->faker->city(),
             'zip_code' => $this->faker->postcode(),
             'company' => $this->faker->company(),
-            'isVerified' => true,
-            'isPublic' => true,
+            'is_verified' => true,
+            'is_public' => true,
             'about' => $this->faker->text(),
             'status' => $this->faker->randomElement(['active', 'banned']),
-            'role' => $this->faker->randomElement(['admin', 'user']),
+            'role_id' => $this->faker->numberBetween(1, 3),
             'email_verified_at' => now(),
             'password' => bcrypt('password'), // Change 'password' to your desired default password
             'remember_token' => \Illuminate\Support\Str::random(10),
