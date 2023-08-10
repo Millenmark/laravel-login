@@ -20,6 +20,8 @@ class UserController extends Controller
     public function index()
     {
         return new UserCollection(User::all());
+
+        // return UserResource::collection(User::with('role')->get());
     }
 
     /**
@@ -35,8 +37,8 @@ class UserController extends Controller
 
         User::create([
             'avatar_url' => $request->input('avatarUrl'),
-            'fname' => $request->input('firstName'),
-            'lname' => $request->input('lastName'),
+            'first_name' => $request->input('firstName'),
+            'last_name' => $request->input('lastName'),
             'email' => $request->input('email'),
             'phone_number' => $request->input('phoneNumber'),
             'address' => $request->input('address'),
@@ -45,9 +47,9 @@ class UserController extends Controller
             'city' => $request->input('city'),
             'zip_code' => $request->input('zipCode'),
             'company' => $request->input('company'),
-            'isVerified' => $request->input('isVerified'),
+            'is_verified' => $request->input('isVerified'),
             'status' => $request->input('status') ?? 'active',
-            'role' => $request->input('role'),
+            'role_id' => $request->input('roleId'),
             'email_verified_at' => now(),
             'password' => bcrypt('123'),
         ]);
@@ -112,7 +114,7 @@ class UserController extends Controller
                 'company' => $request->input('company') ?? $user->company,
                 'isVerified' => $request->input('isVerified') ?? $user->isVerified,
                 'status' => $request->input('status') ?? $user->status,
-                'role' => $request->input('role') ?? $user->role,
+                'role_id' => $request->input('roleId') ?? $user->role,
                 'email_verified_at' => now(),
                 'password' => $request->input('password') ?? $user->password,
                 'isPublic' => $request->input('isPublic') ?? $user->isPublic,

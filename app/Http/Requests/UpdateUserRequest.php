@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use App\Rules\ExistingRoleId;
 
 class UpdateUserRequest extends FormRequest
 {
@@ -16,6 +17,11 @@ class UpdateUserRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+
+    protected function existingRoleIdRule()
+    {
+        return new ExistingRoleId();
     }
 
     /**
@@ -40,7 +46,7 @@ class UpdateUserRequest extends FormRequest
             'company' => 'nullable|string|max:255',
             'isVerified' => 'nullable|boolean',
             'status' => 'nullable|string|in:active,banned',
-            'role' => 'nullable|string|in:admin,user',
+            'roleId' => ['required', 'integer', $this->existingRoleIdRule()],
             'isPublic' => 'nullable|boolean',
             'about' => 'nullable|string|max:255'
         ];

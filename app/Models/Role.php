@@ -20,4 +20,9 @@ class Role extends Model
     {
         return $this->hasMany(User::class, 'role_id');
     }
+
+    public function getRolePermissionsAttribute($value)
+    {
+        return unserialize($value);
+    }
 }

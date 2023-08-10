@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Role;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -45,7 +46,7 @@ Route::get('/users/{user}', 'UserController@show')
 
 Route::post('/users', 'UserController@store')
     ->middleware(['validate-access-token', 'validate-api-key'])
-    ->name('users-create');
+    ->name('user-create');
 
 Route::post('/users/upload', 'UserController@upload')
     ->middleware(['validate-access-token', 'validate-api-key'])
@@ -58,3 +59,23 @@ Route::put('/users/{user}', 'UserController@update')
 Route::delete('/users/{user}', 'UserController@destroy')
     ->middleware(['validate-access-token', 'validate-api-key'])
     ->name('users-delete');
+
+
+/**
+ * ROLE ROUTES
+ */
+Route::get('/roles', 'RoleController@index')
+    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->name('role-all');
+
+Route::post('/roles', 'RoleController@store')
+    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->name('role-create');
+
+Route::put('/roles/restore/{id}', 'RoleController@restore')
+    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->name('role-restore');
+
+Route::delete('/roles/{role}', 'RoleController@destroy')
+    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->name('role-delete');

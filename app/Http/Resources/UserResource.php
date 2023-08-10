@@ -18,8 +18,8 @@ class UserResource extends JsonResource
         return [
             'id' => $this->id,
             'avatarUrl' => $this->avatar_url,
-            'firstName' => $this->fname,
-            'lastName' => $this->lname,
+            'firstName' => $this->first_name,
+            'lastName' => $this->last_name,
             'email' => $this->email,
             'phoneNumber' => $this->phone_number,
             'address' => $this->address,
@@ -32,7 +32,12 @@ class UserResource extends JsonResource
             'isPublic' => $this->isPublic,
             'about' => $this->about,
             'status' => $this->status,
-            'role' => $this->role,
+            'roleId' => $this->role_id,
+            'role' => [
+                'roleId' => optional($this->role)->id,
+                'roleName' => optional($this->role)->role_name,
+                'rolePermissions' => optional($this->role)->role_permissions,
+            ],
         ];
     }
 

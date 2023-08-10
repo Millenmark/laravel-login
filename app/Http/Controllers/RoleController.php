@@ -15,17 +15,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return Role::all();
     }
 
     /**
@@ -36,27 +26,28 @@ class RoleController extends Controller
      */
     public function store(StoreRoleRequest $request)
     {
-        //
+        Role::create([
+            'role_name' => $request->input('roleName'),
+            'role_permissions' => serialize($request->input('rolePermissions'))
+        ]);
+
+        return response()
+            ->json([
+                'message' => 'Role Created Successfully ',
+                'status' => 'Created',
+                'code' => 201,
+            ], 201)
+            ->header('Content-Type', 'application/json');
     }
 
     /**
+     * 
      * Display the specified resource.
      *
      * @param  \App\Models\Role  $role
      * @return \Illuminate\Http\Response
      */
     public function show(Role $role)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Role  $role
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Role $role)
     {
         //
     }
@@ -81,6 +72,33 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        // Check if the role is associated with any user
+        if ($role->users()->count() > 0) {
+            // Respond with a message indicating that the role cannot be deleted
+            return response()->json(['message' => 'Role cannot be deleted as it is associated with a user'], 409);
+        }
+
+        // Soft delete the role
+        $role->delete();
+
+        // Respond with a success message
+        return response()->json(['message' => 'Role deleted successfully']);
+    }
+
+    /**
+     * RESTORING A SINGLE ROLE
+     */
+
+    public function restore($id)
+    {
+        $role = Role::onlyTrashed()->find($id);
+
+        if (!$role) {
+            return response()->json(['message' => 'Role not found'], 404);
+        }
+
+        $role->restore();
+
+        return response()->json(['message' => 'Role restored successfully ']);
     }
 }
