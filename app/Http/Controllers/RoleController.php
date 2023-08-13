@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Role;
 use App\Http\Requests\StoreRoleRequest;
 use App\Http\Requests\UpdateRoleRequest;
+use App\Http\Resources\RoleCollection;
+use App\Http\Resources\RoleResource;
 
 class RoleController extends Controller
 {
@@ -15,7 +17,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return Role::all();
+        return new RoleCollection(Role::all());
     }
 
     /**
@@ -49,7 +51,7 @@ class RoleController extends Controller
      */
     public function show(Role $role)
     {
-        //
+        return new RoleResource($role);
     }
 
     /**
@@ -61,7 +63,21 @@ class RoleController extends Controller
      */
     public function update(UpdateRoleRequest $request, Role $role)
     {
-        //
+        try {
+            $role->fill([
+                'role_name' => $request->input('roleName') ?? $role->role_name,
+                'role_permissions' => serialize($request->input('rolePermissions')) ?? $role->role_permissions,
+            ])->save();
+
+            return response()->json([
+                'message' => 'Role updated successfully.',
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred while updating the user.',
+                'error' => $e->getMessage(),
+            ], 500);
+        }
     }
 
     /**
@@ -88,7 +104,6 @@ class RoleController extends Controller
     /**
      * RESTORING A SINGLE ROLE
      */
-
     public function restore($id)
     {
         $role = Role::onlyTrashed()->find($id);

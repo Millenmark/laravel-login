@@ -28,12 +28,12 @@ class UserResource extends JsonResource
             'city' => $this->city,
             'zipCode' => $this->zip_code,
             'company' => $this->company,
-            'isVerified' => $this->isVerified,
-            'isPublic' => $this->isPublic,
+            'isVerified' => $this->is_verified,
+            'isPublic' => $this->is_public,
             'about' => $this->about,
             'status' => $this->status,
-            'roleId' => $this->role_id,
-            'role' => [
+            'role' => optional($this->role)->role_name,
+            'roleInfo' => [
                 'roleId' => optional($this->role)->id,
                 'roleName' => optional($this->role)->role_name,
                 'rolePermissions' => optional($this->role)->role_permissions,
@@ -50,7 +50,6 @@ class UserResource extends JsonResource
      */
     public function withResponse($request, $response)
     {
-
         $response->setData($this->toArray($request));
     }
 }

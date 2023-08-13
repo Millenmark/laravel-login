@@ -5,7 +5,6 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use ReallySimpleJWT\Token;
-use App\Models\User;
 
 class VerifyToken
 {

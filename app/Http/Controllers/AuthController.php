@@ -35,11 +35,13 @@ class AuthController extends Controller
                 'token' => $token,
                 'user' => [
                     'id' => $user->id,
-                    'firstName' => $user->fname,
-                    'lastName' => $user->lname,
+                    'firstName' => $user->first_name,
+                    'lastName' => $user->last_name,
                     'email' => $user->email,
                 ]
-            ], 200);
+            ], 200)
+                ->header('Content-Type', 'application/json')
+                ->header('Authorization', 'Bearer ' . $token);
         }
 
         return response()->json(['message' => 'Invalid credentials'], 401);
@@ -81,8 +83,8 @@ class AuthController extends Controller
         }
 
         $user = User::create([
-            'fname' => $request->input('firstName'),
-            'lname' => $request->input('lastName'),
+            'first_name' => $request->input('firstName'),
+            'last_name' => $request->input('lastName'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
         ]);
@@ -100,11 +102,12 @@ class AuthController extends Controller
                 'token' => $token,
                 'user' => [
                     'id' => $user->id,
-                    'firstName' => $user->fname,
-                    'lastName' => $user->lname,
+                    'firstName' => $user->first_name,
+                    'lastName' => $user->last_name,
                     'email' => $user->email,
                 ],
             ], 201)
-            ->header('Content-Type', 'application/json');
+            ->header('Content-Type', 'application/json')
+            ->header('Authorization', 'Bearer ' . $token);
     }
 }

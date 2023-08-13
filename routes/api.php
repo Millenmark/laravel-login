@@ -37,27 +37,27 @@ Route::get('/account/profile', 'UserController@profile')
  * USER ROUTES
  */
 Route::get('/users', 'UserController@index')
-    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin-admin'])
     ->name('users-all');
 
 Route::get('/users/{user}', 'UserController@show')
-    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin-admin'])
     ->name('users-show');
 
 Route::post('/users', 'UserController@store')
-    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin'])
     ->name('user-create');
 
 Route::post('/users/upload', 'UserController@upload')
-    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin'])
     ->name('users-avatar-upload');
 
 Route::put('/users/{user}', 'UserController@update')
-    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin'])
     ->name('users-update');
 
 Route::delete('/users/{user}', 'UserController@destroy')
-    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin'])
     ->name('users-delete');
 
 
@@ -65,17 +65,25 @@ Route::delete('/users/{user}', 'UserController@destroy')
  * ROLE ROUTES
  */
 Route::get('/roles', 'RoleController@index')
-    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin-admin'])
     ->name('role-all');
 
+Route::get('/roles/{role}', 'RoleController@show')
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin'])
+    ->name('role-show');
+
 Route::post('/roles', 'RoleController@store')
-    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin'])
     ->name('role-create');
 
+Route::put('/roles/{role}', 'RoleController@update')
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin'])
+    ->name('role-update');
+
 Route::put('/roles/restore/{id}', 'RoleController@restore')
-    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin'])
     ->name('role-restore');
 
 Route::delete('/roles/{role}', 'RoleController@destroy')
-    ->middleware(['validate-access-token', 'validate-api-key'])
+    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin'])
     ->name('role-delete');
