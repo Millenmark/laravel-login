@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use ReallySimpleJWT\Token;
 use App\Models\User;
 use Illuminate\Validation\Rules\Password;
+use App\Http\Resources\UserResource;
 
 class AuthController extends Controller
 {
@@ -33,12 +34,7 @@ class AuthController extends Controller
 
             return response()->json([
                 'token' => $token,
-                'user' => [
-                    'id' => $user->id,
-                    'firstName' => $user->first_name,
-                    'lastName' => $user->last_name,
-                    'email' => $user->email,
-                ]
+                'user' => new UserResource($user),
             ], 200)
                 ->header('Content-Type', 'application/json')
                 ->header('Authorization', 'Bearer ' . $token);
@@ -87,6 +83,7 @@ class AuthController extends Controller
             'last_name' => $request->input('lastName'),
             'email' => $request->input('email'),
             'password' => bcrypt($request->input('password')),
+            'role_id' => 3,
         ]);
 
         $token = Token::customPayload([
@@ -100,12 +97,7 @@ class AuthController extends Controller
                 'status' => 'Created',
                 'code' => 201,
                 'token' => $token,
-                'user' => [
-                    'id' => $user->id,
-                    'firstName' => $user->first_name,
-                    'lastName' => $user->last_name,
-                    'email' => $user->email,
-                ],
+                'user' => new UserResource($user),
             ], 201)
             ->header('Content-Type', 'application/json')
             ->header('Authorization', 'Bearer ' . $token);

@@ -34,7 +34,7 @@ class ForSuperadminAndAdmin
                 ], 400);
             } else if (!in_array($user->role->role_name, $allowedRoles)) {
                 return response()->json([
-                    'message' => 'You don\'t have the permission to access this route',
+                    'message' => 'You don\'t have the permission',
                     'status' => 'Forbidden',
                     'code' => 403
                 ], 403);

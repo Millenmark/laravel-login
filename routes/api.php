@@ -81,7 +81,10 @@ Route::put('/roles/{role}', 'RoleController@update')
     ->name('role-update');
 
 Route::put('/roles/restore/{id}', 'RoleController@restore')
-    ->middleware(['validate-access-token', 'validate-api-key', 'superadmin'])
+    ->middleware([
+        'validate-access-token', 'validate-api-key',
+        // 'superadmin'
+    ])
     ->name('role-restore');
 
 Route::delete('/roles/{role}', 'RoleController@destroy')
